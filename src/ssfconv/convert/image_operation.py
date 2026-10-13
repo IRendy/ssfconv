@@ -59,9 +59,9 @@ def getImageAvg(image_path:Path, area=(0, 0, 0, 0)):
             for y in range(y1, y2):
                 for x in range(x1, x2):
                     if img[y][x][3] > 0:
-                        r += img[y][x][0]
-                        g += img[y][x][1]
-                        b += img[y][x][2]
+                        r += int(img[y][x][0])
+                        g += int(img[y][x][1])
+                        b += int(img[y][x][2])
                         count += 1
         else:
             for y in range(y1, y2):
