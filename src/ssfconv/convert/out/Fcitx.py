@@ -1,7 +1,6 @@
 from ..image_operation import *
 from ..ini_ssf_operation import *
 
-#TODO 用pathlib 替换
 import os
 
 # 创建符号链接的函数（若存在则覆盖）
@@ -29,7 +28,7 @@ def makeConfFromSsf(ssf):
     return skin
 
 
-def ssf2fcitx(skin_dir:str):
+def ssf2fcitx(skin_dir: Path):
     """
         转换为 fcitx 格式
         将解压后的 ssf 皮肤，在里面创建出 fcitx_skin.conf
@@ -138,31 +137,31 @@ def ssf2fcitx(skin_dir:str):
 
     # 创建中文拼音状态图 pinyin.png
     if cn_status_image:
-        symlinkF(cn_status_image, skin_dir + os.sep + 'pinyin.png')
+        symlinkF(cn_status_image, skin_dir / 'pinyin.png')
 
     # 创建全/半角状态图 fullwidth_active.png / fullwidth_inactive.png
     if quan_status_image:
-        symlinkF(quan_status_image, skin_dir + os.sep + 'fullwidth_active.png')
+        symlinkF(quan_status_image, skin_dir / 'fullwidth_active.png')
     if ban_status_image:
-        symlinkF(ban_status_image, skin_dir + os.sep + 'fullwidth_inactive.png')
+        symlinkF(ban_status_image, skin_dir / 'fullwidth_inactive.png')
 
     # 创建中/英文标点状态图 punc_active.png / punc_inactive.png
     if cn_p_status_image:
-        symlinkF(cn_p_status_image, skin_dir + os.sep + 'punc_active.png')
+        symlinkF(cn_p_status_image, skin_dir / 'punc_active.png')
     if en_p_status_image:
-        symlinkF(en_p_status_image, skin_dir + os.sep + 'punc_inactive.png')
+        symlinkF(en_p_status_image, skin_dir / 'punc_inactive.png')
 
     # 创建繁/简状态图 chttrans_inactive.png / chttrans_active.png
     if simp_status_image:
-        symlinkF(simp_status_image, skin_dir + os.sep + 'chttrans_inactive.png')
+        symlinkF(simp_status_image, skin_dir / 'chttrans_inactive.png')
     if trad_status_image:
-        symlinkF(trad_status_image, skin_dir + os.sep + 'chttrans_active.png')
+        symlinkF(trad_status_image, skin_dir / 'chttrans_active.png')
 
     # 创建虚拟键盘状态图 vk_inactive.png / vk_active.png
     if vk_inactive_status_image:
-        symlinkF(vk_inactive_status_image, skin_dir + os.sep + 'vk_inactive.png')
+        symlinkF(vk_inactive_status_image, skin_dir / 'vk_inactive.png')
     if vk_active_status_image:
-        symlinkF(vk_active_status_image, skin_dir + os.sep + 'vk_active.png')
+        symlinkF(vk_active_status_image, skin_dir / 'vk_active.png')
 
     # 求搜狗状态栏上几个按钮的坐标的最值
     x_min = y_min = 65536
@@ -189,7 +188,7 @@ def ssf2fcitx(skin_dir:str):
         # 得到图标尺寸
         icon_image = ssfw.get_image_config('StatusBar', button, 0)
         if not icon_image: continue
-        size = getImageSize(skin_dir + os.sep + icon_image)
+        size = getImageSize(skin_dir / icon_image)
 
         # 取最右值
         x = int(pos[0]) + size[0]
@@ -200,7 +199,7 @@ def ssf2fcitx(skin_dir:str):
 
     # 得出合适的右边距和下边距
     if static_bar_image:
-        size = getImageSize(skin_dir + os.sep + static_bar_image)
+        size = getImageSize(skin_dir / static_bar_image)
         MarginRight = size[0] - x_max + 4
         MarginBottom = size[1] - y_max + 4
     else:
@@ -283,11 +282,11 @@ def ssf2fcitx(skin_dir:str):
 
     # 输入框背景图
     input_bar_image = ssfw.get_image_config('Scheme_H1', 'pic')
-    input_bar_image_size = getImageSize(skin_dir + os.sep + input_bar_image)
+    input_bar_image_size = getImageSize(skin_dir / input_bar_image)
 
     # 绘制 prev.png 和 next.png 颜色为 '%d %d %d' % other_color
-    savePolygon((6,12), ((0,0),(6,6),(0,12)), other_color, skin_dir + os.sep + 'next.png')
-    savePolygon((6,12), ((0,6),(6,0),(6,12)), other_color, skin_dir + os.sep + 'prev.png')
+    savePolygon((6,12), ((0,0),(6,6),(0,12)), other_color, skin_dir / 'next.png')
+    savePolygon((6,12), ((0,6),(6,0),(6,12)), other_color, skin_dir / 'prev.png')
 
     # 水平边距
     lh = ssfw.try_get_value('Scheme_H1', 'layout_horizontal')
@@ -402,9 +401,9 @@ def ssf2fcitx(skin_dir:str):
 
     # 使用系统默认的 active.png 和 inactive.png
     symlinkF('/usr/share/fcitx/skin/default/active.png',
-               skin_dir + os.sep + 'active.png')
+               skin_dir / 'active.png')
     symlinkF('/usr/share/fcitx/skin/default/inactive.png',
-               skin_dir + os.sep + 'inactive.png')
+               skin_dir / 'inactive.png')
 
     skin['SkinTrayIcon'] = {
         # 活动输入法图标
@@ -424,7 +423,7 @@ def ssf2fcitx(skin_dir:str):
                 a[i][j][1] = back_color[1]
                 a[i][j][2] = back_color[2]
     img = Image.fromarray(a)
-    img.save(skin_dir + os.sep + 'menu.png')
+    img.save(skin_dir / 'menu.png')
 
     skin['SkinMenu'] = {
         # 背景图片
@@ -457,5 +456,5 @@ def ssf2fcitx(skin_dir:str):
         #'KeyColor': '%d %d %d' % first_color,
     }
 
-    skin.write(open(skin_dir + os.sep + 'fcitx_skin.conf', 'w', encoding="utf-8"), False)
+    skin.write(open(skin_dir / 'fcitx_skin.conf', 'w', encoding="utf-8"), False)
     return 0

@@ -1,7 +1,5 @@
 from ..ini_ssf_operation import *
 
-#TODO 用pathlib 替换
-import os
 
 def makeConfFromSsf(ssf):
     skin = CaseSensitiveConfigParser(allow_no_value = True)
@@ -25,7 +23,7 @@ def makeConfFromSsf(ssf):
     return skin
 
 
-def ssf2fcitx5(skin_dir:str):
+def ssf2fcitx5(skin_dir: Path):
     """
         转换为 fcitx5 格式
         将解压后的 ssf 皮肤，在里面创建出 theme.conf
@@ -73,7 +71,7 @@ def ssf2fcitx5(skin_dir:str):
 
     # 输入框背景图
     input_bar_image = ssfw.get_image_config('Scheme_H1', 'pic')
-    input_bar_image_size = getImageSize(skin_dir + os.sep + input_bar_image)
+    input_bar_image_size = getImageSize(skin_dir / input_bar_image)
 
     # 水平拉升区域
     lh = ssfw.try_get_value('Scheme_H1', 'layout_horizontal')
@@ -165,7 +163,7 @@ def ssf2fcitx5(skin_dir:str):
 
     # 绘制高亮的纯色图片
     # menu_highlight_color = rgbDistMax(first_color, input_color, other_color, back_color)
-    Image.new('RGBA', (38,23), (0,0,0,0)).save(skin_dir + os.sep + 'highlight.png')
+    Image.new('RGBA', (38,23), (0,0,0,0)).save(skin_dir / 'highlight.png')
 
     # 高亮背景
     skin['InputPanel/Highlight'] = {
@@ -181,8 +179,8 @@ def ssf2fcitx5(skin_dir:str):
 
 
     # 绘制 prev.png 和 next.png 颜色为 '%d %d %d' % other_color
-    savePolygon((16,24), ((5,6),(5,18),(11,12)), other_color, skin_dir + os.sep + 'next.png')
-    savePolygon((16,24), ((11,6),(11,18),(5,12)), other_color, skin_dir + os.sep + 'prev.png')
+    savePolygon((16,24), ((5,6),(5,18),(11,12)), other_color, skin_dir / 'next.png')
+    savePolygon((16,24), ((11,6),(11,18),(5,12)), other_color, skin_dir / 'prev.png')
 
 
     # 前一页的箭头
@@ -281,7 +279,7 @@ def ssf2fcitx5(skin_dir:str):
                     a[i][j][1] = back_color[1]
                     a[i][j][2] = back_color[2]
         img = Image.fromarray(a)
-        img.save(skin_dir + os.sep + 'menu.png')
+        img.save(skin_dir / 'menu.png')
 
         # 背景图片
         skin['Menu/Background'] = {
@@ -313,7 +311,7 @@ def ssf2fcitx5(skin_dir:str):
 
     # 绘制高亮的透明图片
     #menu_highlight_color = rgbDistMax((255,255,255), back_color, input_color, first_color, other_color)
-    Image.new('RGBA', (38,23), (0,0,0,0)).save(skin_dir + os.sep + 'menu_highlight.png')
+    Image.new('RGBA', (38,23), (0,0,0,0)).save(skin_dir / 'menu_highlight.png')
 
     # 高亮背景
     skin['Menu/Highlight'] = {
@@ -342,7 +340,7 @@ def ssf2fcitx5(skin_dir:str):
                 a[i][j][1] = other_color[1]
                 a[i][j][2] = other_color[2]
     img = Image.fromarray(a)
-    img.save(skin_dir + os.sep + 'radio.png')
+    img.save(skin_dir / 'radio.png')
 
     # 复选框图片
     skin['Menu/CheckBox'] = {
@@ -350,7 +348,7 @@ def ssf2fcitx5(skin_dir:str):
     }
 
     # 绘制箭头图片
-    savePolygon((6,12), ((0,0),(6,6),(0,12)), other_color, skin_dir + os.sep + 'arrow.png')
+    savePolygon((6,12), ((0,0),(6,6),(0,12)), other_color, skin_dir / 'arrow.png')
 
     # 箭头图片
     skin['Menu/SubMenu'] = {
@@ -372,5 +370,5 @@ def ssf2fcitx5(skin_dir:str):
         'Bottom': 5,
     }
 
-    skin.write(open(skin_dir + os.sep + 'theme.conf', 'w', encoding="utf-8"), False)
+    skin.write(open(skin_dir / 'theme.conf', 'w', encoding="utf-8"), False)
     return 0

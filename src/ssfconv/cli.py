@@ -1,4 +1,5 @@
-import sys, shutil
+import sys
+import shutil
 from pathlib import Path
 from .translation import _
 import argparse
@@ -107,12 +108,15 @@ def conv(args):
 
 def main():
     parser = argparse.ArgumentParser(prog="ssfconv")
-    # parser.add_argument("--foo", action="store_true", help="foo help")
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
     add_parser_unpack(subparsers)
     add_parser_convert(subparsers)
 
-    # print(parser.parse_args(["a", "12"]))
     args = parser.parse_args()
-    args.func(args)
+    try:
+        args.func(args)
+    except ValueError as e:
+        print(f"错误: {e}", file=sys.stderr)
+        parser.print_help()
+        sys.exit(1)
